@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  rmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - "15672:15672"
+    expose:
+      - "5672"
+    stdin_open: true
+  myrmq:
+    build:
+      context: .
+    deploy:
+      resources:
+        limits:
+          cpus: '0.69'
+          memory: 100M         
+    container_name: lamboyant_nightingale
+    image: sonatype/nexus3
+    environment:
+      HOST: rmq
+    restart: always
+    stdin_open: true
+    depends_on:
+    - rmq
